@@ -87,18 +87,21 @@ class DotEnv:
 
     def set_as_environment_variables(self) -> bool:
         """
-        Load the current dotenv as system environment variable.
+        Load the current dotenv as system environment variables.
         """
-        if not self.dict():
+        env_dict: Dict[str, Optional[str]] = self.dict()
+        if not env_dict:
             return False
 
-        for k, v in self.dict().items():
+        variables_set: bool = False
+        for k, v in env_dict.items():
             if k in os.environ and not self.override:
                 continue
             if v is not None:
                 os.environ[k] = v
+                variables_set = True
 
-        return True
+        return variables_set
 
     def get(self, key: str) -> Optional[str]:
         """
